@@ -271,7 +271,6 @@ function init_space_indices(;enabled_files = nothing,
                              wdcfiles_force_download = false,
                              wdcfiles_oldest_year = year(now()) - 3,
     wdcfiles_newest_year = nothing)
-@show __source__
     dtcfile   = (enabled_files == nothing) || (:dtcfile in enabled_files)
     fluxtable = (enabled_files == nothing) || (:fluxtable in enabled_files)
     solfsmy   = (enabled_files == nothing) || (:solfsmy in enabled_files)
