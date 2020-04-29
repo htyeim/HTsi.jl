@@ -58,13 +58,15 @@ export get_Kp, get_Ap
 Return the Kp index at Julian Day `DT`.
 
 """
-function get_Kp(DT::Number)
-    Kp_day = get(SatelliteToolbox._wdc_data).Kp(DT)
-
+function get_Kp(DT::DateTime)
+    @show DT
+    Kp_day = get(HTsi._wdc_data).Kp(datetime2julian(DT))
+    @show Kp_day
     # Get the hour of the day and return the appropriate Kp.
-    y, m, d, h, min, sec = JDtoDate(DT)
-
-    return Kp_day[ floor(Int, h / 3) + 1 ]
+    # y, m, d, h, min, sec = JDtoDate(DT)
+    # @show  floor(Int, h / 3)
+    @show Kp_day[ floor(Int, hour(DT) / 3) + 1 ]
+    return Kp_day[ floor(Int, hour(DT) / 3) + 1 ]
 end
 
 """
@@ -83,19 +85,19 @@ Julian day `DT` will be computed.
 By default, `mean` is empty and `daily` is `false`.
 
 """
-function get_Ap(DT::Number; mean::Tuple = (), daily = false)
+function get_Ap(DT::DateTime; mean::Tuple = (), daily = false)
     # Check if we must compute the mean of previous hours.
     if isempty(mean)
-        Ap_day = get(SatelliteToolbox._wdc_data).Ap(DT)
+        Ap_day = get(HTsi._wdc_data).Ap(datetime2julian(DT))
 
         # Check if we must compute the daily mean.
         if daily
             return sum(Ap_day) / 8
         else
             # Get the hour of the day and return the appropriate Ap.
-            y, m, d, h, min, sec = JDtoDate(DT)
+            # y, m, d, h, min, sec = JDtoDate(DT)
 
-            return Ap_day[ floor(Int, h / 3) + 1 ]
+            return Ap_day[ floor(Int, hour(DT) / 3) + 1 ]
         end
     else
         # Check the inputs.
@@ -110,7 +112,7 @@ function get_Ap(DT::Number; mean::Tuple = (), daily = false)
         # Compute the mean.
         Ap_sum = 0
         for h in hv
-            Ap_sum += get_Ap(DT - h / 24; mean = (), daily = false)
+            Ap_sum += get_Ap(DT - Hour(h); mean = (), daily = false)
         end
 
         return Ap_sum / length(hv)
@@ -234,6 +236,7 @@ function _parse_wdcfiles(filepaths::Vector{String}, years::Vector{Int})
                 Kp_k = zeros(Float64, 8)
 
                 for i = 1:8
+                    # e.g. 5- is 4 2/3 4.7 , 5 is 5 and 5+ is 5 1/3 5.3. 
                     Kp_k[i] = parse(Int, ln[2(i - 1) + 13:2(i - 1) + 14]) / 10
                     Ap_k[i] = parse(Int, ln[3(i - 1) + 32:3(i - 1) + 34])
                 end
