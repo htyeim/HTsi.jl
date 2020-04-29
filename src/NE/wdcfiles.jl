@@ -59,13 +59,13 @@ Return the Kp index at Julian Day `DT`.
 
 """
 function get_Kp(DT::DateTime)
-    @show DT
+    # @show DT
     Kp_day = get(HTsi._wdc_data).Kp(datetime2julian(DT))
-    @show Kp_day
+    # @show Kp_day
     # Get the hour of the day and return the appropriate Kp.
     # y, m, d, h, min, sec = JDtoDate(DT)
     # @show  floor(Int, h / 3)
-    @show Kp_day[ floor(Int, hour(DT) / 3) + 1 ]
+    # @show Kp_day[ floor(Int, hour(DT) / 3) + 1 ]
     return Kp_day[ floor(Int, hour(DT) / 3) + 1 ]
 end
 
