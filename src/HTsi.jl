@@ -10,8 +10,8 @@ using JSON
 
 include("get_path.jl")
 
-include("NE/space_indices.jl")
+include("space_indices.jl")
 
-greet() = print("Hello World!")
+greet() = print("Hello World! HTsi")
 
 end # module
