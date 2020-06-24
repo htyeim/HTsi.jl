@@ -33,18 +33,18 @@ Plots.GRBackend()
     solfsmy   = (enabled_files == nothing) || (:solfsmy in enabled_files)
     wdcfiles  = (enabled_files == nothing) || (:wdcfiles in enabled_files)
 
-    dtcfile && HTsi._init_dtcfile(local_path = dtcfile_path,
-                             force_download = dtcfile_force_download)
+    dtcfile && HTsi._init_dtcfile(local_path=dtcfile_path,
+                             force_download=dtcfile_force_download)
 
-    fluxtable && HTsi._init_fluxtable(local_path = fluxtable_path,
-                                 force_download = fluxtable_force_download)
+    fluxtable && HTsi._init_fluxtable(local_path=fluxtable_path,
+                                 force_download=fluxtable_force_download)
 
-    solfsmy && HTsi._init_solfsmy(local_path = solfsmy_path,
-                             force_download = solfsmy_force_download)
+    solfsmy && HTsi._init_solfsmy(local_path=solfsmy_path,
+                             force_download=solfsmy_force_download)
 
-    wdcfiles && HTsi._init_wdcfiles( force_download = wdcfiles_force_download,
-                               wdcfiles_oldest_year = wdcfiles_oldest_year,
-                               wdcfiles_newest_year = wdcfiles_newest_year)
+    wdcfiles && HTsi._init_wdcfiles( force_download=wdcfiles_force_download,
+                               wdcfiles_oldest_year=wdcfiles_oldest_year,
+                               wdcfiles_newest_year=wdcfiles_newest_year)
 
     dts = DateTime(2015, ):Day(1):DateTime(2005, 1, 2, )
     dts = [DateTime(2015, 4, 25, 6, 11, 25),]

@@ -118,17 +118,17 @@ end
 get(_fluxtable_data).F10adj(DT)
 end
 
-@inline get_space_index(::Val{:F10M}, DT::Number; window::Int = 81) =
-    get_space_index(Val(:F10Madj), DT; window = window)
+@inline get_space_index(::Val{:F10M}, DT::Number; window::Int=81) =
+    get_space_index(Val(:F10Madj), DT; window=window)
 
-@inline function get_space_index(::Val{:F10Mobs}, DT::Number; window::Int = 81)
+@inline function get_space_index(::Val{:F10Mobs}, DT::Number; window::Int=81)
     Δ = floor(Int, (window - 1) / 2)
     @_check_data(get(_fluxtable_data).F10obs, DT - Δ)
     @_check_data(get(_fluxtable_data).F10obs, DT + Δ)
     mean(get(_fluxtable_data).F10obs(DT - Δ:1:DT + Δ))
 end
 
-@inline function get_space_index(::Val{:F10Madj}, DT::Number; window::Int = 81)
+@inline function get_space_index(::Val{:F10Madj}, DT::Number; window::Int=81)
     Δ = floor(Int, (window - 1) / 2)
     @_check_data(get(_fluxtable_data).F10adj, DT - Δ)
     @_check_data(get(_fluxtable_data).F10adj, DT + Δ)
@@ -260,35 +260,35 @@ This set of files contain the Kp and Ap indices.
                           (**Default** = `nothing`).
 
 """
-function init_space_indices(;enabled_files = nothing,
-                             dtcfile_path = nothing,
-                             dtcfile_force_download = false,
-                             fluxtable_path = nothing,
-                             fluxtable_force_download = false,
-                             solfsmy_path = nothing,
-                             solfsmy_force_download = false,
-                             wdcfiles_dir = nothing,
-                             wdcfiles_force_download = false,
-                             wdcfiles_oldest_year = year(now()) - 3,
-    wdcfiles_newest_year = nothing)
+function init_space_indices(;enabled_files=nothing,
+                             dtcfile_path=nothing,
+                             dtcfile_force_download=false,
+                             fluxtable_path=nothing,
+                             fluxtable_force_download=false,
+                             solfsmy_path=nothing,
+                             solfsmy_force_download=false,
+                             wdcfiles_dir=nothing,
+                             wdcfiles_force_download=false,
+                             wdcfiles_oldest_year=year(now()) - 3,
+    wdcfiles_newest_year=nothing)
     dtcfile   = (enabled_files == nothing) || (:dtcfile in enabled_files)
     fluxtable = (enabled_files == nothing) || (:fluxtable in enabled_files)
     solfsmy   = (enabled_files == nothing) || (:solfsmy in enabled_files)
     wdcfiles  = (enabled_files == nothing) || (:wdcfiles in enabled_files)
 
-    dtcfile && _init_dtcfile(local_path = dtcfile_path,
-                             force_download = dtcfile_force_download)
+    dtcfile && _init_dtcfile(local_path=dtcfile_path,
+                             force_download=dtcfile_force_download)
 
-    fluxtable && _init_fluxtable(local_path = fluxtable_path,
-                                 force_download = fluxtable_force_download)
+    fluxtable && _init_fluxtable(local_path=fluxtable_path,
+                                 force_download=fluxtable_force_download)
 
-    solfsmy && _init_solfsmy(local_path = solfsmy_path,
-                             force_download = solfsmy_force_download)
+    solfsmy && _init_solfsmy(local_path=solfsmy_path,
+                             force_download=solfsmy_force_download)
 
-    wdcfiles && _init_wdcfiles(local_dir = wdcfiles_dir,
-                               force_download = wdcfiles_force_download,
-                               wdcfiles_oldest_year = wdcfiles_oldest_year,
-                               wdcfiles_newest_year = wdcfiles_newest_year)
+    wdcfiles && _init_wdcfiles(local_dir=wdcfiles_dir,
+                               force_download=wdcfiles_force_download,
+                               wdcfiles_oldest_year=wdcfiles_oldest_year,
+                               wdcfiles_newest_year=wdcfiles_newest_year)
 
     nothing
 end

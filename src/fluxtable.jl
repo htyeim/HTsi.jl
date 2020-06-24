@@ -19,7 +19,7 @@ _fluxtable = @RemoteFile(
     file = "fluxtable.txt",
     dir = "$path_si_root",
     updates = :daily
-   )
+)
 
 # Optional variable that will store the `fluxtable.txt` data.
 @OptionalData(_fluxtable_data, _fluxtable_Structure,
@@ -47,10 +47,10 @@ The user can also specify a location for the file using the keyword
 downloaded.
 
 """
-function _init_fluxtable(;force_download = false, local_path = nothing)
+function _init_fluxtable(;force_download=false, local_path=nothing)
     # Update the remote files if no path is given.
     if local_path == nothing
-        download(_fluxtable; force = force_download)
+        download(_fluxtable; force=force_download)
         local_path = path(_fluxtable)
     end
 

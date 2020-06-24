@@ -32,7 +32,7 @@ _dtcfile = @RemoteFile(
     file="DTCFILE.TXT",
     dir="$path_si_root",
     updates=:daily
-   )
+)
 
 # Optional variable that will store the `DTCFILE.TXT` data.
 @OptionalData(_dtcfile_data, _DTCFILE_Structure,

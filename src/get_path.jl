@@ -1,11 +1,14 @@
 
 
 function get_si_root(k::String)
+    
     file_to = joinpath(homedir(), ".juliaHTsetting.json")
     settings = Dict{String,Any}()
+
     if isfile(file_to)
         settings = JSON.parsefile(file_to)
     end
+
     if haskey(settings, k)
         p = settings[k]
     else

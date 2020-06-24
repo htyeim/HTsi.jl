@@ -50,7 +50,7 @@ _solfsmy = @RemoteFile(
     file="SOLFSMY.TXT",
     dir="$path_si_root",
     updates=:daily
-   )
+)
 
 # Optional variable that will store the `SOLFSMY.TXT` data.
 @OptionalData(_solfsmy_data, _SOLFSMY_Structure,
