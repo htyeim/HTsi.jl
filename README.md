@@ -8,8 +8,24 @@
 
 # space indices
 
-## Near the Earth
+Only a test package, mostly based on
+[SatelliteToolbox.jl](https://github.com/JuliaSpace/SatelliteToolbox.jl)
+(please check it first).
 
-* Kp Ap
-* flux
+The main difference is that this package also support Dst index.
 
+## Dst
+
+![Dst](docs/test_dst.png)
+
+## dtc
+![dtc](docs/test_dtc.png)
+
+## flux
+![flux](docs/test_flux.png)
+
+## solfsym
+![solfsmy](docs/test_solf.png)
+
+## Kp
+![wdc_kp](docs/test_wdc_kp.png)
