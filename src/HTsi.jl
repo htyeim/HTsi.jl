@@ -6,12 +6,12 @@ using OptionalData
 using StaticArrays
 using Statistics
 using Dates
-using JSON
+using Printf
 
-include("get_path.jl")
+
+const path_si_root = joinpath(homedir(), "RD", "SPI")
 
 include("space_indices.jl")
-
 
 greet() = print("Hello World! HTsi")
 

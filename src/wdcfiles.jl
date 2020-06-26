@@ -9,7 +9,7 @@
 #   For more information, see:
 #
 #       https://www.gfz-potsdam.de/en/kp-index/
-#
+#       ftp://ftp.gfz-potsdam.de/pub/home/obs/kp-ap/wdc/wdc_fmt.txt
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # = =#
 
 ################################################################################
@@ -85,7 +85,7 @@ Julian day `DT` will be computed.
 By default, `mean` is empty and `daily` is `false`.
 
 """
-function get_Ap(DT::DateTime; mean::Tuple = (), daily = false)
+function get_Ap(DT::DateTime; mean::Tuple=(), daily=false)
     # Check if we must compute the mean of previous hours.
     if isempty(mean)
         Ap_day = get(HTsi._wdc_data).Ap(datetime2julian(DT))
@@ -112,7 +112,7 @@ function get_Ap(DT::DateTime; mean::Tuple = (), daily = false)
         # Compute the mean.
         Ap_sum = 0
         for h in hv
-            Ap_sum += get_Ap(DT - Hour(h); mean = (), daily = false)
+            Ap_sum += get_Ap(DT - Hour(h); mean=(), daily=false)
         end
 
         return Ap_sum / length(hv)
@@ -149,9 +149,9 @@ by the keyword `wdcfiles_newest_year`. It it is `nothing`, which is the default,
 then it is set to the current year.
 
 """
-function _init_wdcfiles(;force_download = false, local_dir = nothing,
-                        wdcfiles_oldest_year = year(now()) - 3,
-                        wdcfiles_newest_year = nothing)
+function _init_wdcfiles(;force_download=false, local_dir=nothing,
+                        wdcfiles_oldest_year=year(now()) - 3,
+                        wdcfiles_newest_year=nothing)
 
     years     = Int[]
     filepaths = String[]
@@ -161,7 +161,7 @@ function _init_wdcfiles(;force_download = false, local_dir = nothing,
         isdir(local_dir) || mkpath(local_dir)
         (wdcfiles_newest_year == nothing) && (wdcfiles_newest_year = year(now()))
         _prepare_wdc_remote_files(wdcfiles_oldest_year, wdcfiles_newest_year, local_dir)
-        download(_wdcfiles; force = force_download,)
+        download(_wdcfiles; force=force_download,)
 
         # Get the files available and sort them by the year.
         for (sym, wdcfile) in _wdcfiles.files

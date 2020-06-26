@@ -24,6 +24,7 @@ include("./dtcfile.jl")
 include("./fluxtable.jl")
 include("./solfsmy.jl")
 include("./wdcfiles.jl")
+include("./dstfiles.jl")
 include("./space_indices_helpers.jl")
 
 ################################################################################
@@ -105,83 +106,93 @@ These indices require `solfsmy` (see `init_space_indices`).
 This index requires `dtcfile` (see `init_space_indices`).
 
 """
-@inline get_space_index(::Val{:F10}, DT::Number) =
+@inline get_space_index(::SPI{:F10}, DT::Number) =
     get_space_index(Val(:F10adj), DT)
 
-@inline function get_space_index(::Val{:F10obs}, DT::Number)
+@inline function get_space_index(::SPI{:F10obs}, DT::Number)
     @_check_data(get(_fluxtable_data).F10obs, DT)
 get(_fluxtable_data).F10obs(DT)
 end
 
-@inline function get_space_index(::Val{:F10adj}, DT::Number)
+@inline function get_space_index(::SPI{:F10adj}, DT::Number)
     @_check_data(get(_fluxtable_data).F10adj, DT)
 get(_fluxtable_data).F10adj(DT)
 end
 
-@inline get_space_index(::Val{:F10M}, DT::Number; window::Int=81) =
+@inline get_space_index(::SPI{:F10M}, DT::Number; window::Int=81) =
     get_space_index(Val(:F10Madj), DT; window=window)
 
-@inline function get_space_index(::Val{:F10Mobs}, DT::Number; window::Int=81)
+@inline function get_space_index(::SPI{:F10Mobs}, DT::Number; window::Int=81)
     Δ = floor(Int, (window - 1) / 2)
     @_check_data(get(_fluxtable_data).F10obs, DT - Δ)
     @_check_data(get(_fluxtable_data).F10obs, DT + Δ)
     mean(get(_fluxtable_data).F10obs(DT - Δ:1:DT + Δ))
 end
 
-@inline function get_space_index(::Val{:F10Madj}, DT::Number; window::Int=81)
+@inline function get_space_index(::SPI{:F10Madj}, DT::Number; window::Int=81)
     Δ = floor(Int, (window - 1) / 2)
     @_check_data(get(_fluxtable_data).F10adj, DT - Δ)
     @_check_data(get(_fluxtable_data).F10adj, DT + Δ)
     mean(get(_fluxtable_data).F10adj(DT - Δ:1:DT + Δ))
 end
 
-@inline function get_space_index(::Val{:Kp_vect}, DT::Number)
+@inline function get_space_index(::SPI{:Kp_vect}, DT::Number)
     @_check_data(get(_wdc_data).Kp, DT)
     get(_wdc_data).Kp(DT)
 end
 
-@inline function get_space_index(::Val{:Ap_vect}, DT::Number)
+@inline function get_space_index(::SPI{:Ap_vect}, DT::Number)
     @_check_data(get(_wdc_data).Ap, DT)
     get(_wdc_data).Ap(DT)
 end
 
-@inline get_space_index(::Val{:Kp}, DT::Number) =
+@inline get_space_index(::SPI{:Kp}, DT::Number) =
     mean(get_space_index(Val(:Kp_vect), DT))
 
-@inline get_space_index(::Val{:Ap}, DT::Number) =
+@inline get_space_index(::SPI{:Ap}, DT::Number) =
     mean(get_space_index(Val(:Ap_vect), DT))
 
-@inline function get_space_index(::Val{:S10}, DT::Number)
+
+@inline function get_space_index(::SPI{:Dst_vect}, DT::Number)
+    @_check_data(get(_dst_data).Dst, DT)
+    get(_dst_data).Dst(DT)
+end
+
+@inline get_space_index(::SPI{:Dst}, DT::Number) =
+    mean(get_space_index(Val(:Dst_vect), DT))
+
+
+@inline function get_space_index(::SPI{:S10}, DT::Number)
     @_check_data(get(_solfsmy_data).S10, DT)
     get(_solfsmy_data).S10(DT)
 end
 
-@inline function get_space_index(::Val{:S81a}, DT::Number)
+@inline function get_space_index(::SPI{:S81a}, DT::Number)
     @_check_data(get(_solfsmy_data).S81a, DT)
     get(_solfsmy_data).S81a(DT)
 end
 
-@inline function get_space_index(::Val{:M10}, DT::Number)
+@inline function get_space_index(::SPI{:M10}, DT::Number)
     @_check_data(get(_solfsmy_data).M10, DT)
     get(_solfsmy_data).M10(DT)
 end
 
-@inline function get_space_index(::Val{:M81a}, DT::Number)
+@inline function get_space_index(::SPI{:M81a}, DT::Number)
     @_check_data(get(_solfsmy_data).M81a, DT)
     get(_solfsmy_data).M81a(DT)
 end
 
-@inline function get_space_index(::Val{:Y10}, DT::Number)
+@inline function get_space_index(::SPI{:Y10}, DT::Number)
     @_check_data(get(_solfsmy_data).Y10, DT)
     get(_solfsmy_data).Y10(DT)
 end
 
-@inline function get_space_index(::Val{:Y81a}, DT::Number)
+@inline function get_space_index(::SPI{:Y81a}, DT::Number)
     @_check_data(get(_solfsmy_data).Y81a, DT)
     get(_solfsmy_data).Y81a(DT)
 end
 
-@inline function get_space_index(::Val{:DstΔTc}, DT::Number)
+@inline function get_space_index(::SPI{:DstΔTc}, DT::Number)
     @_check_data(get(_dtcfile_data).DstΔTc, DT)
     get(_dtcfile_data).DstΔTc(DT)
 end
@@ -260,35 +271,51 @@ This set of files contain the Kp and Ap indices.
                           (**Default** = `nothing`).
 
 """
-function init_space_indices(;enabled_files=nothing,
-                             dtcfile_path=nothing,
-                             dtcfile_force_download=false,
-                             fluxtable_path=nothing,
-                             fluxtable_force_download=false,
-                             solfsmy_path=nothing,
-                             solfsmy_force_download=false,
-                             wdcfiles_dir=nothing,
-                             wdcfiles_force_download=false,
-                             wdcfiles_oldest_year=year(now()) - 3,
-    wdcfiles_newest_year=nothing)
+function init_space_indices(;
+            enabled_files=nothing,
+            dtcfile_path=nothing,
+            dtcfile_force_download=false,
+
+            fluxtable_path=nothing,
+            fluxtable_force_download=false,
+
+            solfsmy_path=nothing,
+            solfsmy_force_download=false,
+
+            wdcfiles_dir=nothing,
+            wdcfiles_force_download=false,
+            wdcfiles_oldest_year=year(now()) - 3,
+            wdcfiles_newest_year=nothing,
+
+            dstfiles_dir=nothing,
+            dstfiles_force_download=false,
+            dstfiles_oldest_year=year(now()) - 3,
+            dstfiles_newest_year=nothing
+        )
     dtcfile   = (enabled_files == nothing) || (:dtcfile in enabled_files)
     fluxtable = (enabled_files == nothing) || (:fluxtable in enabled_files)
     solfsmy   = (enabled_files == nothing) || (:solfsmy in enabled_files)
     wdcfiles  = (enabled_files == nothing) || (:wdcfiles in enabled_files)
+    dstfiles  = (enabled_files == nothing) || (:dstfiles in enabled_files)
 
     dtcfile && _init_dtcfile(local_path=dtcfile_path,
-                             force_download=dtcfile_force_download)
+                            force_download=dtcfile_force_download)
 
     fluxtable && _init_fluxtable(local_path=fluxtable_path,
-                                 force_download=fluxtable_force_download)
+                                force_download=fluxtable_force_download)
 
     solfsmy && _init_solfsmy(local_path=solfsmy_path,
-                             force_download=solfsmy_force_download)
+                            force_download=solfsmy_force_download)
 
     wdcfiles && _init_wdcfiles(local_dir=wdcfiles_dir,
-                               force_download=wdcfiles_force_download,
-                               wdcfiles_oldest_year=wdcfiles_oldest_year,
-                               wdcfiles_newest_year=wdcfiles_newest_year)
+                            force_download=wdcfiles_force_download,
+                            wdcfiles_oldest_year=wdcfiles_oldest_year,
+                            wdcfiles_newest_year=wdcfiles_newest_year)
+
+    dstfiles && _init_dstfiles(local_dir=dstfiles_dir,
+                            force_download=dstfiles_force_download,
+                            dstfiles_oldest_year=dstfiles_oldest_year,
+                            dstfiles_newest_year=dstfiles_newest_year)
 
     nothing
 end
