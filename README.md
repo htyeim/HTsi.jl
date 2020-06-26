@@ -12,7 +12,7 @@ Only a test package, mostly based on
 [SatelliteToolbox.jl](https://github.com/JuliaSpace/SatelliteToolbox.jl)
 (please check it first).
 
-The main difference is that this package also support Dst index.
+The main difference is that this package also supports Dst index.
 
 ## Dst
 
