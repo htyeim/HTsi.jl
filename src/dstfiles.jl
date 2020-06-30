@@ -108,7 +108,7 @@ function _init_dstfiles(;force_download=false, local_dir=nothing,
     if local_dir == nothing
         local_dir = joinpath(path_si_root, "dst")
         isdir(local_dir) || mkpath(local_dir)
-        (dstfiles_newest_year == nothing) && (wdcfiles_newest_year = year(now()))
+        (dstfiles_newest_year == nothing) && (dstfiles_newest_year = year(now()))
         _prepare_dst_remote_files(dstfiles_oldest_year, dstfiles_newest_year, local_dir)
         download(_dstfiles; force=force_download,)
 
