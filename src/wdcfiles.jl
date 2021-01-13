@@ -277,7 +277,7 @@ This function modifies the global variable `_wdcfiles`.
 """
 function _prepare_wdc_remote_files(oldest_year::Number, newest_year::Number, local_dir::String)
     # Get the current year.
-    current_year = year(now())
+    current_year = year(now() - Day(31))
 
     # If `oldest_year` is greater than current year, then consider only the
     # current year.
