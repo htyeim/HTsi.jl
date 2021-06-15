@@ -101,9 +101,17 @@ function _parse_fluxtable(path::AbstractString)
             DT_k  = DateTime(year, month, day, 12, 0, 0)
 
             # Get the raw data.
-            push!(DT,      DT_k)
-            push!(F10obs,  parse(Float64, tokens[5]))
-            push!(F10adj,  parse(Float64, tokens[6]))
+
+            if isempty(DT) || DT_k != DT[end]
+                push!(DT,      DT_k)
+                push!(F10obs,  parse(Float64, tokens[5]))
+                push!(F10adj,  parse(Float64, tokens[6]))
+            else
+            
+                DT[end] =  DT_k
+                F10obs[end] = parse(Float64, tokens[5])
+                F10adj[end] = parse(Float64, tokens[6])
+            end
         end
     end
 
