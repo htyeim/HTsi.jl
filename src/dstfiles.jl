@@ -300,7 +300,7 @@ function _prepare_dst_remote_files(oldest_year::Number, newest_year::Number, loc
     # end_time => dst type
     url_prefix = [
             DateTime(2014, 12, 31, 23, 59, 59) => "dst_final",
-            DateTime(2016, 12, 31, 23, 59, 59) => "dst_provisional",
+            DateTime(2017, 12, 31, 23, 59, 59) => "dst_provisional",
             now() => "dst_realtime",
         ]
 
